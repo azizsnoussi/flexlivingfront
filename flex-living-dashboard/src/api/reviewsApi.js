@@ -1,6 +1,6 @@
 import axios from "axios";
 
-const API_URL = process.env.REACT_APP_API_URL || "https://flexliving.onrender.com/api/reviews/hostaway";
+const API_URL = process.env.REACT_APP_API_URL || "https://flexliving.onrender.com/api";
 
 export async function fetchHostawayReviews() {
   const response = await axios.get(`${API_URL}/reviews/hostaway`);
