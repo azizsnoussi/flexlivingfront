@@ -1,7 +1,0 @@
-{
-  "scripts": {
-    "start": "concurrently \"npm run start:frontend\" \"npm run start:backend\"",
-    "start:frontend": "cd flex-living-dashboard && npm start",
-    "start:backend": "cd flex-living-backend && npm run dev"
-  }
-}
