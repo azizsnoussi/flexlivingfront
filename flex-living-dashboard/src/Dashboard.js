@@ -1,12 +1,12 @@
 import React, { useState, useMemo } from "react";
 import { Container, Typography, Box, CssBaseline } from "@mui/material";
-import { useReviews } from "../hooks/useReviews";
+import { useReviews } from "./hooks/useReviews";
 
-import Filters from "../components/Dashboard/Filters";
-import ListingSummary from "../components/Dashboard/ListingSummary";
-import ReviewList from "../components/Dashboard/ReviewList";
-import ApprovedReviews from "../components/ApprovedReviews";
-import ListingRatingsChart from "../components/Dashboard/ListingRatingsChart";
+import Filters from "./components/Dashboard/Filters";
+import ListingSummary from "./components/Dashboard/ListingSummary";
+import ReviewList from "./components/Dashboard/ReviewList";
+import ApprovedReviews from "./components/ApprovedReviews";
+import ListingRatingsChart from "./components/Dashboard/ListingRatingsChart";
 
 export default function Dashboard() {
   const { reviews, loading, error } = useReviews();
