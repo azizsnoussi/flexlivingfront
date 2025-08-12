@@ -1,30 +1,45 @@
-// useReviews.js
 import { useState, useEffect } from "react";
-import axios from "axios";
+import { fetchHostawayReviews } from "../api/reviewsApi";
 
 export function useReviews() {
-  const [reviews, setReviews] = useState([]);
+  const [reviews, setReviews] = useState(null);  // Start with null to detect "not loaded"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function fetchReviews() {
+    let isMounted = true; // To avoid setting state if component unmounted
+
+    async function loadReviews() {
       try {
         setLoading(true);
-        const res = await axios.get(
-          "https://flexliving.onrender.com/api/reviews/hostaway"
-        );
-        console.log("Fetched from API:", res.data);
-        setReviews(res.data.reviews || []);
+        setError(null);
+        const response = await fetchHostawayReviews();
+
+        console.log("Fetched from API:", response);
+
+        // Defensive: make sure response.data.reviews is an array
+        const reviewsData = response?.data?.reviews;
+        if (Array.isArray(reviewsData)) {
+          if (isMounted) setReviews(reviewsData);
+        } else {
+          if (isMounted) setReviews([]);
+          console.warn("Warning: reviews data not an array", reviewsData);
+        }
       } catch (err) {
-        console.error("Error fetching reviews:", err);
-        setError(err.message);
+        if (isMounted) {
+          setError(err.message || "Failed to load reviews");
+          setReviews([]);
+        }
       } finally {
-        setLoading(false);
+        if (isMounted) setLoading(false);
       }
     }
 
-    fetchReviews();
+    loadReviews();
+
+    return () => {
+      isMounted = false; // cleanup on unmount
+    };
   }, []);
 
   return { reviews, loading, error };
