@@ -20,7 +20,7 @@ export default function Dashboard() {
   const [sortKey, setSortKey] = useState("submittedAt");
   const [sortOrder, setSortOrder] = useState("desc");
 
-  console.log("Reviews from API:", reviews); // Debug
+  console.log("Reviews from API:", reviews);
 
   const filteredReviews = useMemo(() => {
     if (!reviews || reviews.length === 0) return [];
@@ -71,6 +71,7 @@ export default function Dashboard() {
     return map;
   }, [reviews]);
 
+  // Loader while fetching
   if (loading) {
     return (
       <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
@@ -79,12 +80,22 @@ export default function Dashboard() {
     );
   }
 
+  // Error display
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ my: 4 }}>
         <Typography variant="h5" color="error">
           Erreur: {error}
         </Typography>
+      </Container>
+    );
+  }
+
+  // No reviews after loading
+  if (!loading && reviews && reviews.length === 0) {
+    return (
+      <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Typography variant="h6">Aucun avis trouvé</Typography>
       </Container>
     );
   }

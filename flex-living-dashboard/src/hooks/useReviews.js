@@ -1,26 +1,31 @@
+// useReviews.js
 import { useState, useEffect } from "react";
-import { fetchHostawayReviews } from "../api/reviewsApi";
+import axios from "axios";
 
 export function useReviews() {
   const [reviews, setReviews] = useState([]);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    async function loadReviews() {
-      setLoading(true);
-      setError(null);
+    async function fetchReviews() {
       try {
-        const data = await fetchHostawayReviews();
-        setReviews(data);
+        setLoading(true);
+        const res = await axios.get(
+          "https://flexliving.onrender.com/api/reviews/hostaway"
+        );
+        console.log("Fetched from API:", res.data);
+        setReviews(res.data.reviews || []);
       } catch (err) {
-        setError(err.message || "Failed to load reviews");
+        console.error("Error fetching reviews:", err);
+        setError(err.message);
       } finally {
         setLoading(false);
       }
     }
-    loadReviews();
+
+    fetchReviews();
   }, []);
 
-  return { reviews, setReviews, loading, error };
+  return { reviews, loading, error };
 }
