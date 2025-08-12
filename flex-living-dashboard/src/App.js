@@ -10,10 +10,8 @@ import ApprovedReviews from "./components/ApprovedReviews";
 import ListingRatingsChart from "./components/Dashboard/ListingRatingsChart";
 
 function App() {
-  // Call hook at the very top
   const { reviews, loading, error } = useReviews();
 
-  // Filters & sorting state
   const [filters, setFilters] = useState({
     listingName: "",
     category: "",
@@ -23,7 +21,6 @@ function App() {
   const [sortKey, setSortKey] = useState("submittedAt");
   const [sortOrder, setSortOrder] = useState("desc");
 
-  // Filter + sort reviews
   const filteredReviews = useMemo(() => {
     return reviews
       .filter((r) => {
@@ -49,7 +46,6 @@ function App() {
       });
   }, [reviews, filters, sortKey, sortOrder]);
 
-  // Group by listing
   const listings = useMemo(() => {
     const map = {};
     reviews.forEach((r) => {
@@ -64,7 +60,6 @@ function App() {
     return map;
   }, [reviews]);
 
-  // Show loading / error before main UI
   if (loading) {
     return (
       <Container maxWidth="lg" sx={{ my: 4 }}>
@@ -83,7 +78,6 @@ function App() {
     );
   }
 
-  // Normal render when data loaded
   return (
     <ReviewsProvider>
       <CssBaseline />
