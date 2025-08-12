@@ -20,7 +20,10 @@ export default function Dashboard() {
   const [sortKey, setSortKey] = useState("submittedAt");
   const [sortOrder, setSortOrder] = useState("desc");
 
+  console.log("Reviews from API:", reviews); // Debug
+
   const filteredReviews = useMemo(() => {
+    if (!reviews || reviews.length === 0) return [];
     return reviews
       .filter((r) => {
         if (
@@ -45,7 +48,9 @@ export default function Dashboard() {
         if (sortKey === "ratingOverall") {
           cmp = (a.ratingOverall || 0) - (b.ratingOverall || 0);
         } else if (sortKey === "submittedAt") {
-          cmp = new Date(a.submittedAt || 0).getTime() - new Date(b.submittedAt || 0).getTime();
+          cmp =
+            new Date(a.submittedAt || 0).getTime() -
+            new Date(b.submittedAt || 0).getTime();
         }
         return sortOrder === "asc" ? cmp : -cmp;
       });
@@ -53,6 +58,7 @@ export default function Dashboard() {
 
   const listings = useMemo(() => {
     const map = {};
+    if (!reviews) return map;
     reviews.forEach((r) => {
       const name = r.listingName || "Unknown";
       if (!map[name]) {
@@ -65,34 +71,20 @@ export default function Dashboard() {
     return map;
   }, [reviews]);
 
-  // Show loading spinner
   if (loading) {
     return (
-      <Container maxWidth="lg" sx={{ my: 4, textAlign: "center" }}>
+      <Box display="flex" justifyContent="center" alignItems="center" height="100vh">
         <CircularProgress />
-        <Typography variant="h6" sx={{ mt: 2 }}>
-          Chargement des données...
-        </Typography>
-      </Container>
+      </Box>
     );
   }
 
-  // Show error
   if (error) {
     return (
       <Container maxWidth="lg" sx={{ my: 4 }}>
         <Typography variant="h5" color="error">
           Erreur: {error}
         </Typography>
-      </Container>
-    );
-  }
-
-  // Show no reviews
-  if (!loading && reviews.length === 0) {
-    return (
-      <Container maxWidth="lg" sx={{ my: 4, textAlign: "center" }}>
-        <Typography variant="h6">Aucun avis trouvé</Typography>
       </Container>
     );
   }
