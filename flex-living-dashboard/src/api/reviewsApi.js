@@ -1,8 +1,12 @@
 import axios from "axios";
 
 export async function fetchHostawayReviews() {
-  
-  const response = await axios.get("https://flexliving.onrender.com/api/reviews/hostaway");
-  
-  return response.data.reviews || [];
+  try {
+    const response = await axios.get("https://flexliving.onrender.com/api/reviews/hostaway");
+    console.log("Full API response:", response);
+    return response.data; 
+  } catch (error) {
+    console.error("API error:", error);
+    throw error;
+  }
 }
