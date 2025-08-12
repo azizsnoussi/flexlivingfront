@@ -10,6 +10,7 @@ import ApprovedReviews from "./components/ApprovedReviews";
 import ListingRatingsChart from "./components/Dashboard/ListingRatingsChart";
 
 function App() {
+  // Call hook at the very top
   const { reviews, loading, error } = useReviews();
 
   // Filters & sorting state
@@ -63,6 +64,26 @@ function App() {
     return map;
   }, [reviews]);
 
+  // Show loading / error before main UI
+  if (loading) {
+    return (
+      <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Typography variant="h5">En cours ...</Typography>
+      </Container>
+    );
+  }
+
+  if (error) {
+    return (
+      <Container maxWidth="lg" sx={{ my: 4 }}>
+        <Typography variant="h5" color="error">
+          Erreur: {error}
+        </Typography>
+      </Container>
+    );
+  }
+
+  // Normal render when data loaded
   return (
     <ReviewsProvider>
       <CssBaseline />
@@ -71,13 +92,9 @@ function App() {
           Flex Living - Reviews Dashboard
         </Typography>
 
-        {loading && <Typography>Loading reviews...</Typography>}
-        {error && <Typography color="error">{error}</Typography>}
-
         <ListingSummary listings={listings} />
 
-<ListingRatingsChart listings={listings} />  {/* Add this */}
-
+        <ListingRatingsChart listings={listings} />
 
         <Filters
           filters={filters}
